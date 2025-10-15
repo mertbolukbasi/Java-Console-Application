@@ -1,4 +1,6 @@
+import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
 
@@ -28,13 +30,13 @@ public class Main {
                 "\n" + RESET);
 
         String ferris = ORANGE + """
-                _~^~^~_
-            \\) /  """ + WHITE + " o o" + ORANGE + """
-                  \\ (/
-             '_   """ + BLACK + "-" + ORANGE + """
-                   _'
-               \\_)--(_/
-            """ + RESET;
+                    _~^~^~_
+                \\) /  """ + WHITE + " o o" + ORANGE + """
+                     \\ (/
+                '_   """ + BLACK + "-" + ORANGE + """
+                       _'
+                   \\_)--(_/
+                """ + RESET;
 
         System.out.print("\nRust's mascot, Ferris, says hello!\n");
         System.out.print(ferris);
@@ -51,7 +53,7 @@ public class Main {
                 "░▀█▀░█▀▀░█▀█░█▄█░░░█▄█░█▀▀░█▄█░█▀▄░█▀▀░█▀▄░█▀▀░░░░ Oğuzhan Aydın\n" +
                 "░░█░░█▀▀░█▀█░█░█░░░█░█░█▀▀░█░█░█▀▄░█▀▀░█▀▄░▀▀█░░▀░ Ege Usuğ\n" +
                 "░░▀░░▀▀▀░▀░▀░▀░▀░░░▀░▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░▀▀▀░░▀░ Yiğit Emre Ünlüçerçi\n" +
-                "\n");
+                "\n" + RESET);
     }
 
     /*
@@ -61,7 +63,56 @@ public class Main {
         [D] University
         [E] Terminate
     */
-    private static void mainMenu() {}
+    private static void mainMenu() {
+        Scanner input = new Scanner(System.in);
+        int userChoice = 0;
+        do {
+            System.out.println("**********************************");
+            System.out.println("Select an option:");
+            System.out.println("1-) Primary School");
+            System.out.println("2-) Secondary School");
+            System.out.println("3-) High School");
+            System.out.println("4-) University School");
+            System.out.println("5-) Terminate");
+            System.out.println("**********************************");
+            System.out.print("Your choice: ");
+
+            if (input.hasNextInt()) {
+                userChoice = input.nextInt();
+
+                switch (userChoice) {
+                    case 1:
+                        System.out.println("\n-> Primary School menu is loading...");
+                        subMenuOptionA();
+                        break;
+                    case 2:
+                        System.out.println("\n-> Secondary School menu is loading...");
+                        subMenuOptionB();
+                        break;
+                    case 3:
+                        System.out.println("\n-> High School menu is loading...");
+                        subMenuOptionC();
+                        break;
+                    case 4:
+                        System.out.println("\n-> University is loading...");
+                        break;
+                    case 5:
+                        break;
+                    default:
+                        System.out.println("\n❌ Please enter a number between 1 and 5.\n");
+                        break;
+                }
+            } else {
+                System.out.println("\n❌ Please enter a number between 1 and 5.\n");
+                input.next();
+                userChoice = 0;
+            }
+
+        } while (userChoice != 5);
+
+        System.out.println("\n👋 End of the program. See you!");
+        input.close();
+    }
 
     /*
         Option A Task 1 -  Age and Zodiac Sign Detection
@@ -185,5 +236,6 @@ public class Main {
 
     public static void main(String[] args) {
         welcomeMessage();
+        mainMenu();
     }
 }
