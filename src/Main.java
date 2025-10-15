@@ -82,15 +82,15 @@ public class Main {
                 switch (userChoice) {
                     case 1:
                         System.out.println("\n-> Primary School menu is loading...");
-                        subMenuOptionA();
+                        subMenuOptionA(input);
                         break;
                     case 2:
                         System.out.println("\n-> Secondary School menu is loading...");
-                        subMenuOptionB();
+                        subMenuOptionB(input);
                         break;
                     case 3:
                         System.out.println("\n-> High School menu is loading...");
-                        subMenuOptionC();
+                        subMenuOptionC(input);
                         break;
                     case 4:
                         System.out.println("\n-> University is loading...");
