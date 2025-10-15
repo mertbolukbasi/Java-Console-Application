@@ -2,7 +2,57 @@ import java.util.ArrayList;
 
 public class Main {
 
-    private static void welcomeMessage() {}
+    public static final String RESET = "\u001B[0m";
+    public static final String RED = "\u001B[31m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String ORANGE = "\u001B[38;5;208m";
+    public static final String WHITE = "\u001B[37m";
+    public static final String BLACK = "\u001B[30m";
+
+    private static void welcomeMessage() {
+        System.out.print("\n" + RED +
+                "\n" +
+                "┌──────────────────────────────────────────────────────────────────────────┐\n" +
+                "│                                                                          │\n" +
+                "│                                                                          │\n" +
+                "│      __      __          ___                                             │\n" +
+                "│     /\\ \\  __/\\ \\        /\\_ \\                                            │\n" +
+                "│     \\ \\ \\/\\ \\ \\ \\     __\\//\\ \\     ___    ___     ___ ___      __        │\n" +
+                "│      \\ \\ \\ \\ \\ \\ \\  /'__`\\\\ \\ \\   /'___\\ / __`\\ /' __` __`\\  /'__`\\      │\n" +
+                "│       \\ \\ \\_/ \\_\\ \\/\\  __/ \\_\\ \\_/\\ \\__//\\ \\L\\ \\/\\ \\/\\ \\/\\ \\/\\  __/      │\n" +
+                "│        \\ `\\___x___/\\ \\____\\/\\____\\ \\____\\ \\____/\\ \\_\\ \\_\\ \\_\\ \\____\\     │\n" +
+                "│         '\\/__//__/  \\/____/\\/____/\\/____/\\/___/  \\/_/\\/_/\\/_/\\/____/     │\n" +
+                "│                                                                          │\n" +
+                "│                                                                          │\n" +
+                "└──────────────────────────────────────────────────────────────────────────┘\n" +
+                "\n" + RESET);
+
+        String ferris = ORANGE + """
+                _~^~^~_
+            \\) /  """ + WHITE + " o o" + ORANGE + """
+                  \\ (/
+             '_   """ + BLACK + "-" + ORANGE + """
+                   _'
+               \\_)--(_/
+            """ + RESET;
+
+        System.out.print("\nRust's mascot, Ferris, says hello!\n");
+        System.out.print(ferris);
+
+        System.out.print("\n" + YELLOW +
+                "\n" +
+                "░▀█▀░█▀▀░█▀█░█▄█░░░█░░░█▀▀░█▀█░█▀▄░█▀▀░█▀▄░░░░\n" +
+                "░░█░░█▀▀░█▀█░█░█░░░█░░░█▀▀░█▀█░█░█░█▀▀░█▀▄░░▀░ Mert Bölükbaşı\n" +
+                "░░▀░░▀▀▀░▀░▀░▀░▀░░░▀▀▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░░▀░\n" +
+                "\n");
+
+        System.out.print("\n" +
+                "\n" +
+                "░▀█▀░█▀▀░█▀█░█▄█░░░█▄█░█▀▀░█▄█░█▀▄░█▀▀░█▀▄░█▀▀░░░░ Oğuzhan Aydın\n" +
+                "░░█░░█▀▀░█▀█░█░█░░░█░█░█▀▀░█░█░█▀▄░█▀▀░█▀▄░▀▀█░░▀░ Ege Usuğ\n" +
+                "░░▀░░▀▀▀░▀░▀░▀░▀░░░▀░▀░▀▀▀░▀░▀░▀▀░░▀▀▀░▀░▀░▀▀▀░░▀░ Yiğit Emre Ünlüçerçi\n" +
+                "\n");
+    }
 
     /*
         [A] Primary School
@@ -134,6 +184,6 @@ public class Main {
     // I will create functions later.
 
     public static void main(String[] args) {
-
+        welcomeMessage();
     }
 }
