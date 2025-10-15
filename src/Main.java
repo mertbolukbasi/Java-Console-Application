@@ -1,4 +1,3 @@
-import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,6 +9,7 @@ public class Main {
     public static final String ORANGE = "\u001B[38;5;208m";
     public static final String WHITE = "\u001B[37m";
     public static final String BLACK = "\u001B[30m";
+    public static final String BLUE = "\u001B[34m";
 
     private static void welcomeMessage() {
         System.out.print("\n" + RED +
@@ -71,7 +71,7 @@ public class Main {
             System.out.println("1-) Primary School");
             System.out.println("2-) Secondary School");
             System.out.println("3-) High School");
-            System.out.println("4-) University School");
+            System.out.println("4-) University");
             System.out.println("5-) Terminate");
             System.out.println("**********************************");
             System.out.print("Your choice: ");
@@ -94,6 +94,7 @@ public class Main {
                         break;
                     case 4:
                         System.out.println("\n-> University is loading...");
+                        connectFourGame(input);
                         break;
                     case 5:
                         break;
@@ -110,6 +111,7 @@ public class Main {
         } while (userChoice != 5);
 
         System.out.println("\n👋 End of the program. See you!");
+        input.nextLine();
     }
 
     /*
@@ -230,7 +232,216 @@ public class Main {
     /*
         Option D - Connect Four Game
     */
-    // I will create functions later.
+
+    // Main function of Option D.
+    private static void connectFourGame(Scanner input) {
+        int row;
+        int col;
+
+        int userChoice = 1;
+        System.out.println(connectFourGameText);
+        System.out.println("Welcome to Connect Four Game!");
+        System.out.println("WRITE EXPLANATION FOR THIS GAME TODO!");
+        do {
+            System.out.println("[1] Start the game");
+            System.out.println("[9] Return main menu");
+            System.out.print("Your choice: ");
+            if (input.hasNextInt()) {
+                userChoice = input.nextInt();
+                if(userChoice == 9) mainMenu(input);
+                if(userChoice != 1 && userChoice != 9) System.out.println("\n❌ Please enter a number 1 or 9.\n");
+            } else {
+                System.out.println("\n❌ Please enter a number 1 or 9.\n");
+                input.nextLine();
+            }
+        } while(userChoice != 1 && userChoice != 9);
+
+        int gameMode = getGameMode(input);
+        int selectedBoard = getSelectedBoard(input);
+        String player1Name = "Player1";
+        String player2Name = "Player2";
+        do {
+            if(player1Name.equals(player2Name)) System.out.println("\n❌ Player name's cannot be same.\n");
+            player1Name = getPlayerName(input, 1);
+            player2Name = getPlayerName(input, 2);
+        } while(player1Name.equals(player2Name));
+
+
+        if (selectedBoard == 1) {
+            row = 5;
+            col = 4;
+        } else if (selectedBoard == 2) {
+            row = 6;
+            col = 5;
+        } else if (selectedBoard == 3) {
+            row = 7;
+            col = 6;
+        } else {
+            row = 5;
+            col = 4;
+        }
+
+        int[][] player1Disc =  new int[row][col];
+        int[][] player2Disc = new int[row][col];
+        for(int i = 0; i < row; i++) {
+            for(int j = 0; j < col; j++) {
+                player1Disc[i][j] = 0;
+                player2Disc[i][j] = 0;
+            }
+        }
+
+        drawBoard(row, col, player1Disc, player2Disc);
+
+        boolean isWorking = true;
+        while(isWorking) {
+            System.out.println(player1Name + "\n" + "Select column which you want to put your disc");
+            int selectedColumn1 = getColumn(input, col);
+            player1Disc = putDisc(row, selectedColumn1, 1, player1Disc, player2Disc);
+            drawBoard(row, col, player1Disc, player2Disc);
+
+            System.out.println(player2Name + "\n" + "Select column which you want to put your disc");
+            int selectedColumn2 = getColumn(input, col);
+            player2Disc = putDisc(row, selectedColumn2, 2, player1Disc, player2Disc);
+            drawBoard(row, col, player1Disc, player2Disc);
+
+        }
+    }
+
+    private static int getSelectedBoard(Scanner input) {
+        int userChoice;
+
+        while (true) {
+            System.out.println("Select board which you want to play");
+            System.out.println("[1] 5x4 (5 row, 4 column)");
+            System.out.println("[2] 6x5 (6 row, 5 column)");
+            System.out.println("[3] 7x6 (7 row, 6 column)");
+            System.out.print("Your choice: ");
+
+            if (input.hasNextInt()) {
+                userChoice = input.nextInt();
+
+                if (userChoice >= 1 && userChoice <= 3) {
+                    input.nextLine();
+                    return userChoice;
+                } else {
+                    System.out.println("\n❌ Please enter a number between 1 and 5.\n");
+                    input.nextLine();
+                }
+            } else {
+                System.out.println("\n❌ Please enter a number between 1 and 5.\n");
+                input.nextLine();
+            }
+        }
+    }
+    private static int getGameMode(Scanner input) {
+        int userChoice;
+
+        while (true) {
+            System.out.println("Select game mode");
+            System.out.println("[1] Singleplayer - Fight with computer");
+            System.out.println("[2] Multiplayer - Play with two-players");
+            System.out.print("Your choice: ");
+
+            if (input.hasNextInt()) {
+                userChoice = input.nextInt();
+
+                if (userChoice >= 1 && userChoice <= 3) {
+                    input.nextLine();
+                    return userChoice;
+                } else {
+                    System.out.println("\n❌ Please enter a number 1 or 2.\n");
+                    input.nextLine();
+                }
+            } else {
+                System.out.println("\n❌ Please enter a number 1 or 2.\n");
+                input.nextLine();
+            }
+        }
+    }
+    private static void drawBoard(int rows, int columns, int[][] player1Discs, int[][] player2Discs) {
+        for(int i = 1; i < columns+1; i++) {
+            System.out.print("    " + i + "   ");
+        }
+        for(int j = 0; j < rows; j++) {
+            System.out.print("\n");
+            for(int i = 0; i < columns; i++) System.out.print("  ━━━━━━");
+            System.out.print("\n");
+            System.out.print(j+1 + "┃");
+            for(int i = 0; i < columns; i++) {
+
+                if(player1Discs[j][i] == 1) System.out.print("  " + BLUE + "⚪" + RESET + "   ┃");
+                else if(player2Discs[j][i] == 1) System.out.print("  " + YELLOW + "⚪" + RESET + "   ┃");
+                else System.out.print("       ┃");
+            }
+        }
+        System.out.print("\n");
+        for(int i = 0; i < columns; i++) System.out.print("  ━━━━━━");
+        System.out.println("\n");
+    }
+    private static String getPlayerName(Scanner input, int playerNumber) {
+        String playerName = "Player" + playerNumber;
+        boolean isWorking = true;
+
+        while (isWorking) {
+            System.out.print("Player " + playerNumber + " name: ");
+            String username = input.nextLine();
+
+            if(username.isEmpty()) {
+                System.out.println("Player " + playerNumber + ": " + playerName);
+                return playerName;
+            }
+            else if (!username.trim().isEmpty()) {
+                playerName = username.trim();
+                isWorking = false;
+            } else {
+                System.out.println("\n❌ Please enter a valid username.\n");
+            }
+        }
+        System.out.println("Player " + playerNumber + ": " + playerName);
+        return playerName;
+    }
+    private static int[][] putDisc(int row, int column, int playerNumber, int[][] player1Discs, int[][] player2Discs) {
+
+        for(int i = row - 1; i >= 0; i--) {
+            if(player1Discs[i][column] == 0 && player2Discs[i][column] == 0) {
+                if(playerNumber == 1) {
+                    player1Discs[i][column] = 1;
+                    break;
+                }
+                else {
+                    player2Discs[i][column] = 1;
+                    break;
+                }
+            }
+        }
+        if(playerNumber == 1) return player1Discs;
+        else return player2Discs;
+    }
+    private static int getColumn(Scanner input, int column) {
+
+        int enteredColumn = -1;
+        do {
+            System.out.print("Enter column number: ");
+            if(input.hasNextInt()) {
+                enteredColumn = input.nextInt() - 1;
+                input.nextLine();
+            }
+            else {
+                System.out.println("\n❌ Please enter a number between 1 and " + column +".\n");
+                input.nextLine();
+            }
+        } while(enteredColumn < 0 || enteredColumn > column);
+
+        return enteredColumn;
+    }
+
+    // TODO
+    private static boolean checkWinner(int[][] playerDisc) { return false; }
+    private static boolean checkHorizontal(int[][] playerDiscs, int row, int col) { return false; }
+    private static boolean checkVertical(int[][] playerDiscs, int row, int col) { return false; }
+    private static boolean checkPositiveDiagonal(int[][] playerDiscs, int row, int col) { return false; }
+    private static boolean checkNegativeDiagonal(int[][] playerDiscs, int row, int col) { return false; }
+
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -238,4 +449,17 @@ public class Main {
         mainMenu(input);
         input.close();
     }
+
+    private static final String connectFourGameText = """
+            
+            
+             ██████╗ ██████╗ ███╗   ██╗███╗   ██╗███████╗ ██████╗████████╗    ███████╗ ██████╗ ██╗   ██╗██████╗      ██████╗  █████╗ ███╗   ███╗███████╗
+            ██╔════╝██╔═══██╗████╗  ██║████╗  ██║██╔════╝██╔════╝╚══██╔══╝    ██╔════╝██╔═══██╗██║   ██║██╔══██╗    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝
+            ██║     ██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██║        ██║       █████╗  ██║   ██║██║   ██║██████╔╝    ██║  ███╗███████║██╔████╔██║█████╗ \s
+            ██║     ██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██║        ██║       ██╔══╝  ██║   ██║██║   ██║██╔══██╗    ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝ \s
+            ╚██████╗╚██████╔╝██║ ╚████║██║ ╚████║███████╗╚██████╗   ██║       ██║     ╚██████╔╝╚██████╔╝██║  ██║    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗
+             ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═╝       ╚═╝      ╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝
+            
+            """;
+
 }
