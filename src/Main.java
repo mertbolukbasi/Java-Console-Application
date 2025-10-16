@@ -202,7 +202,7 @@ public class Main {
     // Main function of Option C Task 1. Print all calculations.
     private static void statisticalInformation() {}
 
-    private static int arraySize(Scanner input) { return 0; }
+    private static int arraySize(Scanner input) { return 1; }
     private static ArrayList<Integer> getElement(Scanner input) { return new ArrayList<>(); }
 
     private static double calculateMedian() { return 0.0; }
