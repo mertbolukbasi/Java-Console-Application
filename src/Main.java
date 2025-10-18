@@ -257,16 +257,21 @@ public class Main {
         } while(userChoice != 1 && userChoice != 9);
 
         int gameMode = getGameMode(input);
-        int selectedBoard = getSelectedBoard(input);
         String player1Name = "Player1";
         String player2Name = "Player2";
-        do {
-            if(player1Name.equals(player2Name)) System.out.println("\n❌ Player name's cannot be same.\n");
+
+        if(gameMode == 2) {
+            do {
+                if(player1Name.equals(player2Name)) System.out.println("\n❌ Player name's cannot be same.\n");
+                player1Name = getPlayerName(input, 1);
+                player2Name = getPlayerName(input, 2);
+            } while(player1Name.equals(player2Name));
+        } else {
             player1Name = getPlayerName(input, 1);
-            player2Name = getPlayerName(input, 2);
-        } while(player1Name.equals(player2Name));
+            player2Name = "Computer";
+        }
 
-
+        int selectedBoard = getSelectedBoard(input);
         if (selectedBoard == 1) {
             row = 5;
             col = 4;
@@ -292,19 +297,41 @@ public class Main {
 
         drawBoard(row, col, player1Disc, player2Disc);
 
-        boolean isWorking = true;
-        while(isWorking) {
-            System.out.println(player1Name + "\n" + "Select column which you want to put your disc");
-            int selectedColumn1 = getColumn(input, col);
-            player1Disc = putDisc(row, selectedColumn1, 1, player1Disc, player2Disc);
-            drawBoard(row, col, player1Disc, player2Disc);
+        if(gameMode == 2) {
+            while(true) {
+                System.out.println(player1Name + "\n" + "Select column which you want to put your disc");
+                int selectedColumn1 = 0;
+                do {
+                    selectedColumn1 = getColumn(input, col);
+                    int realColumn = selectedColumn1 + 1;
+                    if(checkIsColumnFull(player1Disc, player2Disc, selectedColumn1)) System.out.println("Column " + realColumn + " is full.\n");
+                } while(checkIsColumnFull(player1Disc, player2Disc, selectedColumn1));
+                player1Disc = putDisc(row, selectedColumn1, 1, player1Disc, player2Disc);
+                drawBoard(row, col, player1Disc, player2Disc);
+                if(checkWinner(player1Disc, row, col)) {
+                    System.out.println(player1Name + " won the game!");
+                    break;
+                }
 
-            System.out.println(player2Name + "\n" + "Select column which you want to put your disc");
-            int selectedColumn2 = getColumn(input, col);
-            player2Disc = putDisc(row, selectedColumn2, 2, player1Disc, player2Disc);
-            drawBoard(row, col, player1Disc, player2Disc);
-
+                System.out.println(player2Name + "\n" + "Select column which you want to put your disc");
+                int selectedColumn2 = 0;
+                do {
+                    selectedColumn2 = getColumn(input, col);
+                    int realColumn = selectedColumn2 + 1;
+                    if(checkIsColumnFull(player1Disc, player2Disc, selectedColumn2)) System.out.println("Column " + realColumn + " is full.\n");
+                } while(checkIsColumnFull(player1Disc, player2Disc, selectedColumn2));
+                player2Disc = putDisc(row, selectedColumn2, 2, player1Disc, player2Disc);
+                drawBoard(row, col, player1Disc, player2Disc);
+                if(checkWinner(player2Disc, row, col)) {
+                    System.out.println(player2Name + " won the game!");
+                    break;
+                }
+            }
+        } else {
+            // TODO
         }
+
+        mainMenu(input);
     }
 
     private static int getSelectedBoard(Scanner input) {
@@ -358,7 +385,7 @@ public class Main {
             }
         }
     }
-    private static void drawBoard(int rows, int columns, int[][] player1Discs, int[][] player2Discs) {
+    private static void drawBoard(int rows, int columns, int[][] player1Disc, int[][] player2Disc) {
         for(int i = 1; i < columns+1; i++) {
             System.out.print("    " + i + "   ");
         }
@@ -369,8 +396,8 @@ public class Main {
             System.out.print(j+1 + "┃");
             for(int i = 0; i < columns; i++) {
 
-                if(player1Discs[j][i] == 1) System.out.print("  " + BLUE + "⚪" + RESET + "   ┃");
-                else if(player2Discs[j][i] == 1) System.out.print("  " + YELLOW + "⚪" + RESET + "   ┃");
+                if(player1Disc[j][i] == 1) System.out.print("  " + "\uD83D\uDD35" + "   ┃");
+                else if(player2Disc[j][i] == 1) System.out.print("  " + "\uD83D\uDFE1" + "   ┃");
                 else System.out.print("       ┃");
             }
         }
@@ -401,7 +428,6 @@ public class Main {
         return playerName;
     }
     private static int[][] putDisc(int row, int column, int playerNumber, int[][] player1Discs, int[][] player2Discs) {
-
         for(int i = row - 1; i >= 0; i--) {
             if(player1Discs[i][column] == 0 && player2Discs[i][column] == 0) {
                 if(playerNumber == 1) {
@@ -416,6 +442,9 @@ public class Main {
         }
         if(playerNumber == 1) return player1Discs;
         else return player2Discs;
+    }
+    private static boolean checkIsColumnFull(int[][] player1Disc, int[][] player2Disc, int col) {
+        return player1Disc[0][col] == 1 || player2Disc[0][col] == 1;
     }
     private static int getColumn(Scanner input, int column) {
 
@@ -434,13 +463,64 @@ public class Main {
 
         return enteredColumn;
     }
-
-    // TODO
-    private static boolean checkWinner(int[][] playerDisc) { return false; }
-    private static boolean checkHorizontal(int[][] playerDiscs, int row, int col) { return false; }
-    private static boolean checkVertical(int[][] playerDiscs, int row, int col) { return false; }
-    private static boolean checkPositiveDiagonal(int[][] playerDiscs, int row, int col) { return false; }
-    private static boolean checkNegativeDiagonal(int[][] playerDiscs, int row, int col) { return false; }
+    private static boolean checkWinner(int[][] playerDisc, int row, int col) {
+        return checkHorizontal(playerDisc, row, col)
+                || checkVertical(playerDisc, row, col)
+                || checkPositiveDiagonal(playerDisc, row, col)
+                || checkNegativeDiagonal(playerDisc, row, col);
+    }
+    private static boolean checkHorizontal(int[][] playerDiscs, int row, int col) {
+        for(int i = 0; i < row; i++) {
+            for(int j = 0; j < col-3; j++) {
+                if(playerDiscs[i][j] == 1
+                        && playerDiscs[i][j+1] == 1
+                        && playerDiscs[i][j+2] == 1
+                        && playerDiscs[i][j+3] == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private static boolean checkVertical(int[][] playerDiscs, int row, int col) {
+        for(int i = 0; i < row-3; i++) {
+            for(int j = 0; j < col; j++) {
+                if(playerDiscs[i][j] == 1
+                        && playerDiscs[i+1][j] == 1
+                        && playerDiscs[i+2][j] == 1
+                        && playerDiscs[i+3][j] == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private static boolean checkPositiveDiagonal(int[][] playerDiscs, int row, int col) {
+        for(int i = 3; i < row; i++) {
+            for(int j = 0; j < col - 3; j++) {
+                if(playerDiscs[i][j] == 1
+                        && playerDiscs[i-1][j+1] == 1
+                        && playerDiscs[i-2][j+2] == 1
+                        && playerDiscs[i+-3][j+3] == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private static boolean checkNegativeDiagonal(int[][] playerDiscs, int row, int col) {
+        for(int i = 0; i < row - 3; i++) {
+            for(int j = 0; j < col-3; j++) {
+                if(playerDiscs[i][j] == 1
+                && playerDiscs[i+1][j+1] == 1
+                && playerDiscs[i+2][j+2] == 1
+                && playerDiscs[i+3][j+3] == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 
     public static void main(String[] args) {
